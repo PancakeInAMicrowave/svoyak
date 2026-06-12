@@ -4,11 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>СВОЯК</title>
-<link href="https://fonts.cdnfonts.com/css/pixeloid-sans" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- <link href="https://fonts.cdnfonts.com/css/pixeloid-sans" rel="stylesheet"> -->
+<!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+	@font-face {
+		font-family: "Pixeloid Sans";
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('fonts/PixeloidSans.woff2') format('woff2');
+	}
   :root{
     --orange:#FF8400;
     --yellow:#FFE966;
@@ -160,8 +167,8 @@
     transition:transform .1s steps(2);
   }
   .final-btn:hover{transform:translateY(-2px);}
-  .legend{display:flex;align-items:center;gap:10px;margin-top:22px;font-size:13px;color:rgba(255,246,230,.55);}
-  .legend .dot{width:9px;height:9px;background:var(--orange);display:inline-block;}
+  <!--.legend{display:flex;align-items:center;gap:10px;margin-top:22px;font-size:13px;color:rgba(255,246,230,.55);} -->
+  <!-- .legend .dot{width:9px;height:9px;background:var(--orange);display:inline-block;} -->
 
   /* ---------- question ---------- */
   #question{padding:clamp(18px,4vw,40px);justify-content:flex-start;}
@@ -223,7 +230,7 @@
   <div class="final-row">
     <button class="final-btn" onclick="openFinal()">★ Финальный раунд ★</button>
   </div>
-  <div class="legend"><span class="dot"></span> — «кот в мешке»</div>
+  <!-- <div class="legend"><span class="dot"></span> — «кот в мешке»</div> -->
 </section>
 
 <!-- QUESTION -->
@@ -235,10 +242,16 @@
   <div class="q-body">
     <div class="cat-badge" id="catBadge" style="display:none">🐱 Кот в мешке</div>
     <div class="q-text" id="qText"></div>
+	<div class="q-image" id="qImage" style="display:none; margin-top:20px;">
+		<img src="" alt="Вопрос-картинка" style="max-width:100%; border-radius:12px;">
+	</div>
     <button class="btn" id="revealBtn" onclick="revealAnswer()">Узнать ответ</button>
     <div class="answer" id="answerBox">
       <div class="label">Ответ</div>
       <div class="text" id="aText"></div>
+	  <div class="a-image" id="aImage" style="display:none; margin-top:20px;">
+		<img src="" alt="Ответ-картинка" style="max-width:100%; border-radius:12px;">
+	  </div>
     </div>
   </div>
 </section>
@@ -248,7 +261,7 @@ const THEMES = [
   { title:"Лихие 90-е в МИРЭА", questions:[
     {p:100, q:"Какой популярный в 1990-е годы напиток в стеклянных бутылках студенты часто покупали вместо воды?", a:"«Пепси-кола» (или «Кока-кола»)"},
     {p:200, q:"Какая организация пришла на смену комсомолу в МИРЭА в 1992 году?", a:"Студенческий союз МИРЭА"},
-    {p:300, cat:true, q:"Что появилось раньше: интернет в России или первый iPhone?", a:"Интернет — в 1990 году. Первый iPhone — в 2007 году."},
+    {p:300, cat:false, q:"Что появилось раньше: интернет в России или первый iPhone?", a:"Интернет — в 1990 году. Первый iPhone — в 2007 году."},
     {p:400, q:"Как называлась система распределения выпускников вузов по рабочим местам, которая перестала работать в 1990-е? Также с помощью этого фиксируют корабли в море.", a:"Якорь"},
     {p:500, q:"Какую должность — первую в России среди вузов — учредили в МИРЭА в конце 90-х?", a:"Президент университета"},
   ]},
@@ -256,21 +269,21 @@ const THEMES = [
     {p:100, q:"Какое объединение является базовой платформой массового вовлечения студентов в науку?", a:"Студенческое научное общество (СНО)"},
     {p:200, q:"Какое подразделение координирует студенческую науку?", a:"Дирекция научных студенческих программ"},
     {p:300, q:"Как называется экскурсионно-образовательный проект МИРЭА для школьников с посещением мегалабораторий?", a:"«Университетские субботы»"},
-    {p:400, cat:true, q:"Продемонстрируйте приветствие ИПТИП.", a:"Ну львы!"},
+    {p:400, cat:false, q:"Продемонстрируйте приветствие ИПТИП.", a:"Ну львы!"},
     {p:500, q:"Как называется конференция в МИРЭА, в которой ежегодно участвуют более 3000 студентов?", a:"Научно-техническая конференция студентов и аспирантов РТУ МИРЭА"},
   ]},
   { title:"Мозгодробилка", questions:[
-    {p:100, q:"Что написано? (вопрос-картинка)", a:""},
-    {p:200, q:"В официальной биологии такого вида не существует. Однако в интернет-фольклоре этот гибрид семейства кошачьих и зайцеобразных обрёл не только имя, но и биографию: он живёт в советской квартире, спит на диване и не требует логического обоснования. Назовите этого рогатого (точнее — ушастого) льва.", a:""},
-    {p:300, q:"Что написано? (вопрос-картинка)", a:""},
-    {p:400, q:"Что написано? (вопрос-картинка)", a:""},
-    {p:500, q:"«Пароль, построенный на отрицании смысла». Речь идёт о *** ***, которые в сознании поколения Альфа утратили количественное значение и превратились в чистый жест — крик, проверку реальности, маркер «свой/чужой». Никто не знает, почему именно они. Назовите этот числовой код.", a:""},
+    {p:100, q:"Что написано? (вопрос-картинка)", qImage:"images/hypecreator.png", a:"", aImage:"images/hypecreator.png"},
+    {p:200, q:"В официальной биологии такого вида не существует. Однако в интернет-фольклоре этот гибрид семейства кошачьих и зайцеобразных обрёл не только имя, но и биографию: он живёт в советской квартире, спит на диване и не требует логического обоснования. Назовите этого рогатого (точнее — ушастого) льва.", a:"", aImage:"images/cheremsha.png"},
+    {p:300, q:"Что написано? (вопрос-картинка)", qImage:"images/hypecreator.png", a:"", aImage:"images/hypecreator.png"},
+    {p:400, q:"Что написано? (вопрос-картинка)", qImage:"images/hypecreator.png", a:"", aImage:"images/hypecreator.png"},
+    {p:500, q:"«Пароль, построенный на отрицании смысла». Речь идёт о *** ***, которые в сознании поколения Альфа утратили количественное значение и превратились в чистый жест — крик, проверку реальности, маркер «свой/чужой». Никто не знает, почему именно они. Назовите этот числовой код.", a:"", aImage:"images/hypecreator.png"},
   ]},
   { title:"Где? Куда?", questions:[
     {p:100, q:"Какая ветка метро идёт под Проспектом Вернадского?", a:"Сокольническая (красная) линия"},
     {p:200, q:"Как называется высотное здание, которое видно из окон корпуса на Вернадского?", a:"РАНХиГС"},
     {p:300, q:"Парк напротив главного корпуса МИРЭА на Вернадского, 78.", a:"Парк 50-летия Октября"},
-    {p:400, cat:true, q:"Что можно увидеть один раз в минуту, два раза в момент, но никогда за тысячу лет?", a:"Буква «М» (игра слов)"},
+    {p:400, cat:false, q:"Что можно увидеть один раз в минуту, два раза в момент, но никогда за тысячу лет?", a:"Буква «М» (игра слов)"},
     {p:500, q:"Какой московский вокзал ближе всего к общежитиям МИРЭА на Соколиной горе?", a:"Курский вокзал или Казанский вокзал"},
   ]},
   { title:"Ультра-супер-пупер-мегалаборатории", questions:[
@@ -290,7 +303,7 @@ const THEMES = [
   { title:"Шаришь за ИПТИП?", questions:[
     {p:100, q:"Какое самое популярное направление обучения?", a:"Фуллстек-разработка"},
     {p:200, q:"Как звали сбежавший электрон?", a:"Борис Богданович"},
-    {p:300, cat:true, q:"Какой химический элемент легче всех?", a:"Водород. Молекулярная масса газообразного водорода составляет около 2 г/моль."},
+    {p:300, cat:false, q:"Какой химический элемент легче всех?", a:"Водород. Молекулярная масса газообразного водорода составляет около 2 г/моль."},
     {p:400, q:"Назовите основные традиционные мероприятия нашего Института.", a:"«ИПТИП жарит», Корпоративный НГ, НИНЖ, «Познакомимся?»"},
     {p:500, q:"Назовите 3 последних состава комитета.", a:"Цех Надежда (Молодцова Варвара, Самойленко Анна, Ибатуллина Азалия, Аккерман Даниил, Михайлик Мария); Гукетлев Хазрет (Банокина Дарья, Тазетдинова Аделлина, Федосова Юлия, Хубаева Аделла, Феничев Аркадий); Сулейманова Виктория (Сиднев Дмитрий, Гукетлев Хазрет, Жилин Егор, Варданян Вагинак, Шаньгин Лев)."},
   ]},
@@ -377,8 +390,17 @@ function openQuestion(ti, qi){
   const qq = THEMES[ti].questions[qi];
   document.getElementById('qTag').innerHTML = `${THEMES[ti].title} · <b>${qq.p}</b>`;
   document.getElementById('qText').textContent = qq.q;
+  const qImgDiv = document.getElementById('qImage');
+  const qImg = qImgDiv.querySelector('img');
+  if (qq.qImage) {
+    qImg.src = qq.qImage;
+    qImgDiv.style.display = 'block';
+  } else {
+    qImgDiv.style.display = 'none';
+    qImg.src = '';
+  }
   document.getElementById('catBadge').style.display = qq.cat ? 'inline-block' : 'none';
-  prepareAnswer(qq.a);
+  prepareAnswer(qq.a, qq.aImage);
   showScreen('question');
 }
 
@@ -391,19 +413,33 @@ function openFinal(){
   showScreen('question');
 }
 
-function prepareAnswer(text){
+function prepareAnswer(text, aImage){
   const box = document.getElementById('answerBox');
   const aText = document.getElementById('aText');
+  const aImgDiv = document.getElementById('aImage');
+  const aImg = aImgDiv.querySelector('img');
+  
   box.classList.remove('show');
+  
   if(text && text.trim()){
     aText.textContent = text;
     aText.classList.remove('muted');
   } else {
-    aText.textContent = "Ответ не указан в исходном документе (вопрос-картинка / заполняется ведущим).";
+	if(aImg) {
+		aText.textContent = "";
+	}
     aText.classList.add('muted');
   }
-  const btn = document.getElementById('revealBtn');
-  btn.style.display = 'inline-block';
+  
+  if(aImage && aImage.trim()){
+    aImg.src = aImage;
+    aImgDiv.style.display = 'block';
+  } else {
+    aImgDiv.style.display = 'none';
+    aImg.src = '';
+  }
+  
+  document.getElementById('revealBtn').style.display = 'inline-block';
 }
 
 function revealAnswer(){
